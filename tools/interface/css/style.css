@@ -1,0 +1,67 @@
+.material-symbols-outlined {
+    font-variation-settings:
+    'FILL' 0,
+    'wght' 400,
+    'GRAD' 0,
+    'opsz' 24
+}
+
+* {
+    transition: all 0.1s;
+}
+
+body {
+    margin: 0;
+    background-color: #333;
+    height: 100vh;
+    color: #fff;
+    font-size: 18px;
+}
+
+/* NAVBAR */
+
+#navbar {
+    display: flex;
+    align-items: center;
+}
+
+/* INTERFACE */
+
+button {
+    background-color: #0000;
+    border: 0;
+    border-radius: 10px 0 0 10px;
+    padding: 8px;
+    color: #fff;    
+}
+
+button:hover {
+    background-color: #fff3;
+}
+
+button span {
+    filter: drop-shadow(-3px 3px 1px #0003);
+}
+
+button[class="selected"] {
+    background-color: #555;
+    box-shadow: -5px 5px 5px #0003;
+    z-index: 1;
+}
+
+.vertical {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-end;
+}
+
+.interface {
+    background-color: #555;
+    height: calc(100vh - 43px);
+    box-shadow: -2px 0px 5px #0003;
+}
+
+.containers {
+    display: grid;
+    grid-template-columns: 48px auto;
+}

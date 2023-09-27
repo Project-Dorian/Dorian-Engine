@@ -1,0 +1,19 @@
+{
+  "name": "dorian-engine",
+  "version": "1.0.0",
+  "description": "The Dorian game engine and interface for making games",
+  "main": "index.js",
+  "scripts": {
+    "build": "tsc -b",
+    "start": " node ./"
+  },
+  "author": "HrmX",
+  "license": "GPL-3.0-or-later",
+  "devDependencies": {
+    "@types/express": "^4.17.17",
+    "typescript": "^5.2.2"
+  },
+  "dependencies": {
+    "express": "^4.18.2"
+  }
+}

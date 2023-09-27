@@ -1,0 +1,10 @@
+# Interface Files
+node_modules
+/*.js
+tools/*.js
+.obsidian/
+
+# Project and Compiler Files
+*.o
+build/
+assets/

@@ -1,0 +1,3 @@
+function WriteToFile(data: string) {
+
+}
