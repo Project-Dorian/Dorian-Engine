@@ -11,6 +11,13 @@ namespace drn {
         virtual void init() {};
         virtual void update() {};
         virtual void draw() {};
+
+        virtual ~Node() {};
+    };
+
+    class ObjectNode: public Node {
+        public:
+        Vec3<float> position = ZERO_VECTOR;
     };
 
     // A Low Level Scene for Low Level Programming
@@ -38,7 +45,6 @@ namespace drn {
     // If you need to go more complex, I would suggest LLScene
     class HLScene: public Scene {
         public:
-        std::vector<UIComponent*> UIComponents;
         std::vector<Node*> WorldComponents;
 
         virtual void Init() {
@@ -46,7 +52,6 @@ namespace drn {
         };
         virtual void Draw() {
             for (Node* n : WorldComponents) n->draw();
-            for (UIComponent* n : UIComponents) n->Draw();
         };
         virtual void Update() {
             for (Node* n : WorldComponents) n->update();

@@ -1,6 +1,6 @@
-COMPILER=-Iengine/include/ -std=c++20
-ENGINELINKER=-Lbuild/ -ldorian
-LINKER=-Lengine/lib/ -lraylib -lopengl32 -lgdi32 -lwinmm
+COMPILER=-Iengine/include/ -O3
+ENGINELINKER= -ldorian
+LINKER=-Lengine/lib/ -Lbuild/ -lraylib -lopengl32 -lgdi32 -lwinmm -llua51
 
 # Takes a lua script, converts it to a string variable file (.clua), and compiles it to a .lua.o
 CONVERT_LUA:
@@ -19,7 +19,7 @@ build_game:
 	g++ Engine/src/main.cpp $(ENGINELINKER) $(LINKER) $(COMPILER) -o build/game.exe
 
 test: build_game
-	./build/game.exe
+	cd build && ./build/game.exe
 
 clean:
 	rm *.o || del *.o

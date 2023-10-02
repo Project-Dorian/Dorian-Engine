@@ -21,5 +21,12 @@ From there, you will have two options. You can either edit the project via https
 > ### Collaboration
 > If you decide to locally collaborate, you are expected to test on a computer that you have easy access to. I would suggest connecting controllers to the testing computer to allow smooth gameplay. Although remote collaboration is possible, it may feel awkward to test.
 
-> ### Setting Up Raylib
-> To setup raylib, you are suggested to compile for `PLATFORM=PLATFORM_DESKTOP`. You will then place your `libraylib.a` in `engine/lib`
+### Setting Up External Libraries
+Due to the libraries being compiled statically, some of these modules may not be available directly out of the box.
+
+#### Raylib (REQUIRED)
+To setup raylib, you are suggested to compile for `PLATFORM=PLATFORM_DESKTOP`. You will then place your `libraylib.a` in `engine/lib/` and place `raylib.h`, `raymath.h`, and `rlgl.h` in `engine/include/`
+
+#### Lua (OPTIONAL)
+This engine was built with [LuaJIT](https://luajit.org/index.html). You should follow the instructions for how to setup the libraries, then place `lua51.dll` into `build/`, and you will place the following headers into `engine/include/`: `lauxlib.h`, `lua.h`, `lua.hpp`, `luajit.h`, `lualib.h`.
+ 
