@@ -3,9 +3,14 @@
 #include <drn/scene.hpp>
 #include <drn/luanode.hpp>
 
+namespace drn {
+    extern Window* WindowPT;
+}
+
 using namespace drn;
 
 Window GameWindow;
+Window* WindowPT = &GameWindow;
 
 HLScene EmptyScene;
 

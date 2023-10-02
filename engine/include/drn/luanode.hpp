@@ -23,7 +23,7 @@ namespace drn {
 
         virtual void init();
         virtual void draw();
-        virtual void update() {};
+        virtual void update();
     };
 }
 

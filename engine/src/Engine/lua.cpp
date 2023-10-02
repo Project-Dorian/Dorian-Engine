@@ -1,5 +1,9 @@
 #include <drn/luanode.hpp>
 
+namespace drn {
+    extern Window* WindowPT{nullptr};
+}
+
 using namespace drn;
 
 //---------------//
@@ -16,9 +20,17 @@ int l_drawRectangle(lua_State *L) {
     return 0;
 }
 
+int l_getDT(lua_State *L) {
+    lua_pushnumber(L, WindowPT->getDT());
+    return 1;
+}
+
 void lua_setup(lua_State* L) {
     lua_pushcfunction(L, l_drawRectangle);
     lua_setglobal(L, "DrawRect");
+
+    lua_pushcfunction(L, l_getDT);
+    lua_setglobal(L, "GetDeltaTime");
 }
 
 //-----------//
@@ -46,5 +58,10 @@ void LuaNode::init() {
 
 void LuaNode::draw() {
     lua_getglobal(L, "draw");
+    lua_pcall(L, 0, 0, 0);
+}
+
+void LuaNode::update() {
+    lua_getglobal(L, "update");
     lua_pcall(L, 0, 0, 0);
 }
