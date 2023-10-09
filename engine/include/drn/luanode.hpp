@@ -25,6 +25,19 @@ namespace drn {
         virtual void draw();
         virtual void update();
     };
+
+    class LuaObjectNode: public ObjectNode {
+        private:
+        lua_State *L;
+        std::string data;
+
+        LuaObjectNode(std::string file);
+        virtual ~LuaObjectNode();
+
+        virtual void init();
+        virtual void draw();
+        virtual void update();
+    };
 }
 
 #endif

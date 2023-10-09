@@ -3,11 +3,10 @@
 
 #include "dorian.hpp"
 #include "vec.hpp"
-#include "../raylib.h"
 
 #include <string>
 
-#define DORIAN_IMAGETYPE Texture2D
+#define DORIAN_IMAGETYPE SDL_Surface*
 
 namespace drn {
     //----------------//
@@ -27,17 +26,19 @@ namespace drn {
         ui8 A;
     };
 
-    extern void DrawSprite();
+    //extern void DrawSprite();
 
-    extern void DrawRect(Vec2<int> pos, Vec2<int> size);
-    extern void DrawRect(Vec2<int> pos, Vec2<int> size, RGB rgb);
-    extern void DrawRect(Vec2<int> pos, Vec2<int> size, RGBA rgba);
+    extern void DrawRect(Vec2<float> pos, Vec2<float> size);
+    //extern void DrawRect(Vec2<int> pos, Vec2<int> size, RGB rgb);
+    //extern void DrawRect(Vec2<int> pos, Vec2<int> size, RGBA rgba);
 
-    extern void DrawText(std::string text, Vec2<int> pos);
-    extern void DrawText(std::string text, Vec2<int> pos, RGB rgb);
+    //extern void DrawText(std::string text, Vec2<int> pos);
+    //extern void DrawText(std::string text, Vec2<int> pos, RGB rgb);
+
+    //extern void DrawLine(Vec2<int> start, Vec2<int> end);
     
-    extern void FillBG(RGB rgb);
-    extern void FillBG(RGBA rgba);
+    //extern void FillBG(RGB rgb);
+    //extern void FillBG(RGBA rgba);
 
     class Image {
         private:
@@ -55,7 +56,7 @@ namespace drn {
         void DrawCenter(Vec2<int> screenPos);
         void DrawCenter(Vec2<int> screenPos, float Scale);
 
-        Vec2<int> GetDimensions() {return {m_imgData.width, m_imgData.height};};
+        Vec2<int> GetDimensions() {return {0, 0};};
     };
 }
 

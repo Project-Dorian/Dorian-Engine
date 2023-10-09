@@ -1,27 +1,23 @@
 #include <drn/dorian.hpp>
-#include <drn/graphics.hpp>
 #include <drn/scene.hpp>
-#include <drn/luanode.hpp>
-
-namespace drn {
-    extern Window* WindowPT;
-}
+#include <iostream>
 
 using namespace drn;
 
 Window GameWindow;
-Window* WindowPT = &GameWindow;
 
-HLScene EmptyScene;
+int emptyfunc() {return 0;}
 
-int nodecount = 0;
+int DrawTest() {
+    DrawRect({0, 0}, {100, 100});
+    return 0;
+}
 
-LuaNode Object("testluaobject.lua");
+LLScene EmptyScene(emptyfunc, DrawTest, emptyfunc);
 
-int main() {
-    EmptyScene.WorldComponents.push_back(&Object);
-    
-    GameWindow.Init(&EmptyScene);
+int SDL_main(int argv, char** args) {
+    int response = GameWindow.Init(&EmptyScene);
+    if (response != 0) return response;
 
     GameWindow.Loop();
 

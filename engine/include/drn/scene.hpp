@@ -2,7 +2,7 @@
 #define DORIAN_SCENE
 
 #include "dorian.hpp"
-#include "ui.hpp"
+#include "graphics.hpp"
 
 namespace drn {
 
@@ -18,6 +18,11 @@ namespace drn {
     class ObjectNode: public Node {
         public:
         Vec3<float> position = ZERO_VECTOR;
+        Vec3<float> Rotation = ZERO_VECTOR;
+
+        DORIAN_IMAGETYPE CurrentSprite;
+
+        virtual void draw();
     };
 
     // A Low Level Scene for Low Level Programming
@@ -26,17 +31,15 @@ namespace drn {
     class LLScene: public Scene {
         private:
         int (*M_InitPF)();
-        int (*M_DrawPF)(int);
-        int (*M_UpdatePF)(int);
-
-        int m_InitState{0};
+        int (*M_DrawPF)();
+        int (*M_UpdatePF)();
 
         public:
-        LLScene(int initfunc (), int drawfunc (int), int updatefunc (int));
+        LLScene(int initfunc (), int drawfunc (), int updatefunc ());
 
-        virtual void Init() { m_InitState = (*M_InitPF)(); };
-        virtual void Update() { (*M_UpdatePF)(m_InitState); };
-        virtual void Draw() { (*M_DrawPF)(m_InitState); };
+        virtual void Init() { (*M_InitPF)(); };
+        virtual void Update() { (*M_UpdatePF)(); };
+        virtual void Draw() { (*M_DrawPF)(); };
     };
 
 
@@ -45,6 +48,9 @@ namespace drn {
     // If you need to go more complex, I would suggest LLScene
     class HLScene: public Scene {
         public:
+        Vec3<float> CameraPos = {0, 0, -10};
+        Vec3<float> CameraRot = ZERO_VECTOR;
+
         std::vector<Node*> WorldComponents;
 
         virtual void Init() {
@@ -53,9 +59,9 @@ namespace drn {
         virtual void Draw() {
             for (Node* n : WorldComponents) n->draw();
         };
-        virtual void Update() {
-            for (Node* n : WorldComponents) n->update();
-        };
+        virtual void Update();
+
+        Vec2<int> ProjectPerspective(Vec3<float> pos);
     };
 }
 

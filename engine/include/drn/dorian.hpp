@@ -1,7 +1,9 @@
 #ifndef DORIAN_MAIN
 #define DORIAN_MAIN
 
-#include "../raylib.h"
+#include "SDL2/SDL.h"
+
+
 #include "vec.hpp"
 #include <vector>
 #include <string>
@@ -45,6 +47,9 @@ namespace drn {
         Scene* m_CurrentScene;
         float m_CurrentDT;
 
+        SDL_Window* m_window;
+        SDL_GLContext m_glContext;
+
         std::string m_WindowName;
         i32 m_windowWidth;
         i32 m_windowHeight;
@@ -61,11 +66,11 @@ namespace drn {
         // Load a Scene into the game
         void LoadScene(Scene*);
         // Call this to officially initialize the game
-        void Init(Scene*);
+        int Init(Scene*);
         // The primary loop function of a Dorian Window
         void Loop();
 
-        Vec2<i32> GetWindowDimensions() {return {m_windowWidth, m_windowHeight};};
+        Vec2<i32> GetWindowDimensions() {return {DWINDOW_WIDTH, DWINDOW_HEIGHT};};
 
         // TODO: Get the rest of the anchors programmed in the game.
         // They are not needed for this game specifically, but could help in the future
