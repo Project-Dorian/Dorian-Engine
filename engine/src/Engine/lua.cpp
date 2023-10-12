@@ -29,22 +29,36 @@ int l_getWindowHeight(lua_State *L) {
 // Graphics 
 
 int l_drawRectangle(lua_State *L) {
-    int x = lua_tonumber(L, 1);
-    int y = lua_tonumber(L, 2);
-    int w = lua_tonumber(L, 3);
-    int h = lua_tonumber(L, 4);
+    float x = lua_tonumber(L, 1);
+    float y = lua_tonumber(L, 2);
+    float w = lua_tonumber(L, 3);
+    float h = lua_tonumber(L, 4);
 
-    //DrawRect({x, y}, {w, h});
+    DrawRect({x, y}, {w, h});
     return 0;
 }
 
 int l_drawLine(lua_State *L) {
-    int x1 = lua_tonumber(L, 1);
-    int y1 = lua_tonumber(L, 2);
-    int x2 = lua_tonumber(L, 3);
-    int y2 = lua_tonumber(L, 4);
+    float x1 = lua_tonumber(L, 1);
+    float y1 = lua_tonumber(L, 2);
+    float x2 = lua_tonumber(L, 3);
+    float y2 = lua_tonumber(L, 4);
 
     //drn::DrawLine({x1, y1}, {x2, y2});
+    return 0;
+}
+
+int l_drawQuad(lua_State *L) {
+    float x1 = lua_tonumber(L, 1);
+    float y1 = lua_tonumber(L, 2);
+    float x2 = lua_tonumber(L, 3);
+    float y2 = lua_tonumber(L, 4);
+    float x3 = lua_tonumber(L, 5);
+    float y3 = lua_tonumber(L, 6);
+    float x4 = lua_tonumber(L, 7);
+    float y4 = lua_tonumber(L, 8);
+
+    drn::DrawQuad({x1, y1}, {x2, y2}, {x3, y3}, {x4, y4});
     return 0;
 }
 
@@ -88,6 +102,9 @@ void lua_setup(lua_State* L) {
     lua_pushcfunction(L, l_drawLine);
     lua_setglobal(L, "DrawLine");
 
+    lua_pushcfunction(L, l_drawQuad);
+    lua_setglobal(L, "DrawQuad");
+
     // Input
     lua_pushcfunction(L, l_inputDown);
     lua_setglobal(L, "InputDown");
@@ -113,7 +130,7 @@ LuaNode::~LuaNode() {
 }
 
 void LuaNode::init() {
-    luaL_dofile(L, m_filename.c_str());
+    if (luaL_dofile(L, m_filename.c_str())) Debug_Warn("File " << m_filename.c_str() << " Not Found"); 
 }
 
 void LuaNode::draw() {

@@ -19,10 +19,6 @@ namespace drn {
         public:
         Vec3<float> position = ZERO_VECTOR;
         Vec3<float> Rotation = ZERO_VECTOR;
-
-        DORIAN_IMAGETYPE CurrentSprite;
-
-        virtual void draw();
     };
 
     // A Low Level Scene for Low Level Programming
@@ -37,9 +33,9 @@ namespace drn {
         public:
         LLScene(int initfunc (), int drawfunc (), int updatefunc ());
 
-        virtual void Init() { (*M_InitPF)(); };
-        virtual void Update() { (*M_UpdatePF)(); };
-        virtual void Draw() { (*M_DrawPF)(); };
+        void Init() { (*M_InitPF)(); };
+        void Update() { (*M_UpdatePF)(); };
+        void Draw() { (*M_DrawPF)(); };
     };
 
 
@@ -48,20 +44,21 @@ namespace drn {
     // If you need to go more complex, I would suggest LLScene
     class HLScene: public Scene {
         public:
-        Vec3<float> CameraPos = {0, 0, -10};
-        Vec3<float> CameraRot = ZERO_VECTOR;
+        // Camera Reference Point Variable. not 100% sure about this idea yet.
+        Node* CameraPerspective;
+
 
         std::vector<Node*> WorldComponents;
 
-        virtual void Init() {
+        void Init() {
             for (Node* n : WorldComponents) n->init();
         };
-        virtual void Draw() {
+        void Draw() {
             for (Node* n : WorldComponents) n->draw();
         };
-        virtual void Update();
+        void Update();
 
-        Vec2<int> ProjectPerspective(Vec3<float> pos);
+        //Vec2<int> ProjectPerspective(Vec3<float> pos);
     };
 }
 

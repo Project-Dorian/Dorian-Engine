@@ -3,7 +3,6 @@
 
 #include "SDL2/SDL.h"
 
-
 #include "vec.hpp"
 #include <vector>
 #include <string>
@@ -14,6 +13,22 @@
 
 #ifndef DWINDOW_HEIGHT
 #define DWINDOW_HEIGHT 720
+#endif
+
+#ifdef DEBUG_LEVEL1
+#include <iostream>
+
+#define Debug_Log(string) std::cout << "[" << __TIME__ << "] LOG: "  << string << std::endl
+#define Debug_Warn(string) std::cout << "\x1b[33m[" << __TIME__ << "] WARN: " << string << "\x1b[0m" << std::endl
+#define Debug_Error(string) std::cout << "\x1b[31m[" << __TIME__ << "] ERROR: " << string << "; Line " << __LINE__ <<"\x1b[0m" << std::endl
+#endif
+
+#ifndef DEBUG_LEVEL1
+
+#define Debug_Log(string)
+#define Debug_Warn(string)
+#define Debug_Error(string)
+
 #endif
 
 typedef char          i8;
@@ -74,7 +89,7 @@ namespace drn {
 
         // TODO: Get the rest of the anchors programmed in the game.
         // They are not needed for this game specifically, but could help in the future
-        Vec2<int> AnchorOnScreen(Vec2<int> padding, Vec2<int> size, Anchor anchor) {
+        Vec2<int> AnchorOnScreen(Vec2<i32> padding, Vec2<i32> size, Anchor anchor) {
             // Please fill this in properly
             switch (anchor) {
                 case TopRight:

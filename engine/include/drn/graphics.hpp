@@ -3,6 +3,7 @@
 
 #include "dorian.hpp"
 #include "vec.hpp"
+#include <GL/glew.h>
 
 #include <string>
 
@@ -26,11 +27,19 @@ namespace drn {
         ui8 A;
     };
 
+    int InitGLShaders();
+    extern GLuint DefaultVertexShader;
+    extern GLuint DefaultFragmentShader;
+    extern GLuint gProgramID;
+
+
     //extern void DrawSprite();
 
     extern void DrawRect(Vec2<float> pos, Vec2<float> size);
     //extern void DrawRect(Vec2<int> pos, Vec2<int> size, RGB rgb);
     //extern void DrawRect(Vec2<int> pos, Vec2<int> size, RGBA rgba);
+
+    extern void DrawQuad(Vec2<float> a, Vec2<float> b, Vec2<float> c, Vec2<float> d);
 
     //extern void DrawText(std::string text, Vec2<int> pos);
     //extern void DrawText(std::string text, Vec2<int> pos, RGB rgb);
@@ -39,25 +48,6 @@ namespace drn {
     
     //extern void FillBG(RGB rgb);
     //extern void FillBG(RGBA rgba);
-
-    class Image {
-        private:
-        DORIAN_IMAGETYPE m_imgData;
-
-        public:
-        Image() {};
-        Image(std::string src);
-        //~Image();
-
-        void Draw(Vec2<int> screenPos);
-        void Draw(Vec2<int> screenPos, float Scale);
-
-        // Draws the texture to the center of the point specified
-        void DrawCenter(Vec2<int> screenPos);
-        void DrawCenter(Vec2<int> screenPos, float Scale);
-
-        Vec2<int> GetDimensions() {return {0, 0};};
-    };
 }
 
 #endif

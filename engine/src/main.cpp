@@ -1,23 +1,25 @@
 #include <drn/dorian.hpp>
 #include <drn/scene.hpp>
+#include <drn/luanode.hpp>
 #include <iostream>
 
 using namespace drn;
 
-Window GameWindow;
+Window GameWindow("Game Name");
 
-int emptyfunc() {return 0;}
+#ifndef DORIAN_INITSCENE
+HLScene TestScene;
+LuaNode Cube("spinningcube.lua");
+#define DORIAN_INITSCENE TestScene
+#endif
 
-int DrawTest() {
-    DrawRect({0, 0}, {100, 100});
-    return 0;
-}
-
-LLScene EmptyScene(emptyfunc, DrawTest, emptyfunc);
+Scene EmptyScene;
 
 int SDL_main(int argv, char** args) {
-    int response = GameWindow.Init(&EmptyScene);
+    TestScene.WorldComponents.push_back(&Cube);
+    int response = GameWindow.Init(&DORIAN_INITSCENE);
     if (response != 0) return response;
+    InitGLShaders();
 
     GameWindow.Loop();
 
