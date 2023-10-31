@@ -18,9 +18,9 @@
 #ifdef DEBUG_LEVEL1
 #include <iostream>
 
-#define Debug_Log(string) std::cout << "[" << __TIME__ << "] LOG: "  << string << std::endl
-#define Debug_Warn(string) std::cout << "\x1b[33m[" << __TIME__ << "] WARN: " << string << "\x1b[0m" << std::endl
-#define Debug_Error(string) std::cout << "\x1b[31m[" << __TIME__ << "] ERROR: " << string << "; Line " << __LINE__ <<"\x1b[0m" << std::endl
+#define Debug_Log(string) std::cout << "LOG: "  << string << std::endl
+#define Debug_Warn(string) std::cout << "\x1b[33m  WARN: " << string << "; Line " << __LINE__ << " in " << __FILE__ << "\x1b[0m" << std::endl
+#define Debug_Error(string) std::cout << "\x1b[31m  ERROR: " << string << "; Line " << __LINE__ << " in " << __FILE__ << "\x1b[0m" << std::endl
 #endif
 
 #ifndef DEBUG_LEVEL1
@@ -60,7 +60,7 @@ namespace drn {
     class Window {
         private:
         Scene* m_CurrentScene;
-        float m_CurrentDT;
+        double m_CurrentDT;
 
         SDL_Window* m_window;
         SDL_GLContext m_glContext;
@@ -77,7 +77,7 @@ namespace drn {
         // The Generic Window Class Constructor
         Window(): Window("Dorian Engine", DWINDOW_WIDTH, DWINDOW_HEIGHT) {};
         
-        float getDT();
+        double getDT();
         // Load a Scene into the game
         void LoadScene(Scene*);
         // Call this to officially initialize the game

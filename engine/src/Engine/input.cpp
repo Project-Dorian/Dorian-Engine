@@ -1,5 +1,7 @@
 #include <drn/input.hpp>
 
+drn::BoolArray drn::KeyboardInput(2);
+
 bool drn::InputPressed(int i) {
     //return IsKeyPressed(i);
     return 0;
@@ -11,6 +13,5 @@ bool drn::InputReleased(int i) {
 }
 
 bool drn::InputDown(int i) {
-    //return IsKeyDown(i);
-    return 0;
+    return KeyboardInput[i];
 }

@@ -1,4 +1,6 @@
 #include <drn/scene.hpp>
+#include <drn/input.hpp>
+
 #include <GL/glew.h>
 #include <SDL2/SDL_opengl.h>
 
@@ -10,11 +12,22 @@ namespace drn {
     extern Window* WindowPT;
 }
 
+extern std::vector<GLfloat> VertexData;
+extern std::vector<GLuint> indexData;
+extern std::vector<GLfloat> meshNormals;
+extern int vertexCounter;
+
+std::vector<GLfloat> VertexData{};
+std::vector<GLuint> indexData{};
+std::vector<GLfloat> meshNormals{};
+
 using namespace drn;
 
 Window* drn::WindowPT = nullptr;
 
-// SCENES
+//--------//
+// SCENES //
+//--------//
 
 LLScene::LLScene(int initfunc (), int drawfunc (), int updatefunc ()) {
     M_InitPF = initfunc;
@@ -22,13 +35,52 @@ LLScene::LLScene(int initfunc (), int drawfunc (), int updatefunc ()) {
     M_UpdatePF = updatefunc;
 }
 
-void HLScene::Update() {
+void HLScene::Draw() {
+    for (Node* n : WorldComponents) {
+        // Prepare OpenGL Components
+        VertexData.clear();
+        indexData.clear();
+        vertexCounter = 0;
+        
+        // Call The Draw Function
+        n->draw();
 
-    // Camera Updates
-    for (Node* n : WorldComponents) n->update();
+        // Call OpenGL Buffer and Draw Call if there is anything to draw
+        if (VertexData.size() != 0) {
+            GLuint gVBO{0}; // Vertecies Buffer Object
+            GLuint gIBO{0}; // Indecies Buffer Object
+            GLuint gNBO{0}; // Normals Buffer Object
+
+            glGenBuffers(1, &gVBO);
+            glBindBuffer(GL_ARRAY_BUFFER, gVBO);
+            glBufferData(GL_ARRAY_BUFFER, 2*indexData.size()*sizeof(GLfloat), &VertexData[0], GL_STATIC_DRAW);
+
+            glGenBuffers(1, &gIBO);
+            glBindBuffer(GL_ARRAY_BUFFER, gIBO);
+            glBufferData(GL_ARRAY_BUFFER, indexData.size()*sizeof(GLuint), &indexData[0], GL_STATIC_DRAW);
+
+            GLint gVertexPos2DLocation = glGetAttribLocation(CurrentShader->getProgramID(), "VertexPos");
+
+            glEnableVertexAttribArray(gVertexPos2DLocation);
+
+            glBindBuffer( GL_ARRAY_BUFFER, gVBO );
+	        glVertexAttribPointer( gVertexPos2DLocation, 2, GL_FLOAT, GL_FALSE, 2 * sizeof(GLfloat), NULL );
+
+            // Attaching Normals
+
+            //GLint gMeshNormalsAttr = glGetAttribLocation(CurrentShader->getProgramID(), "fNormal");
+            //glBindAttribLocation(CurrentShader->getProgramID(), )
+            //glAttrib
+
+            glBindBuffer( GL_ELEMENT_ARRAY_BUFFER, gIBO );
+            glDrawElements( GL_TRIANGLES, indexData.size(), GL_UNSIGNED_INT, NULL );
+        }
+    }
 }
 
-// WINDOW CLASS
+//--------------//
+// WINDOW CLASS //
+//--------------//
 
 Window::Window(std::string title, i32 width, i32 height) {
     m_CurrentDT = 0;
@@ -40,13 +92,16 @@ Window::Window(std::string title, i32 width, i32 height) {
 }
 
 void Window::LoadScene(Scene* s) {
-    //Unloads Scene first. Maybe
+    //Unloads Scene first. Maybe. Still need to decide if objects unload data
     //if (m_CurrentScene != nullptr);
     m_CurrentScene = s;
     m_CurrentScene->Init();
 }
 
+Shader drn::DefaultShader;
+
 int Window::Init(Scene* s) {
+    Debug_Log("Dorian Engine - Built on " << __DATE__ << " at approximately " << __TIME__);
     Debug_Log("Sample Normal Log Message");
     Debug_Warn("Sample Log Warning Message");
     Debug_Error("Sample Error Message");
@@ -58,7 +113,7 @@ int Window::Init(Scene* s) {
         return 1;
     }
 
-    SDL_GL_SetAttribute( SDL_GL_CONTEXT_MAJOR_VERSION, 2 );
+    SDL_GL_SetAttribute( SDL_GL_CONTEXT_MAJOR_VERSION, 3 );
     SDL_GL_SetAttribute( SDL_GL_CONTEXT_MINOR_VERSION, 1 );
     SDL_GL_SetAttribute( SDL_GL_CONTEXT_PROFILE_MASK, SDL_GL_CONTEXT_PROFILE_CORE );
 
@@ -86,6 +141,9 @@ int Window::Init(Scene* s) {
     glClearColor(0.f, 0.f, 0.f, 1.f);
 
     // Load Initial Scene
+    Debug_Log("Initializing Shaders");
+    drn::DefaultShader = Shader(DefaultFragmentShader);
+
     Debug_Log("Loading Scene");
     LoadScene(s);
 
@@ -94,26 +152,114 @@ int Window::Init(Scene* s) {
     return 0;
 }
 
-// Rewrite
-float Window::getDT() {
-    return 0;
+// Requires Rewrite
+double Window::getDT() {
+    return m_CurrentDT;
 }
 
 void Window::Loop() {
     SDL_Event e;
-    bool quit = false;
+    bool quit{false};
     
+    // Initializing DeltaTime
+    m_CurrentDT = 0;
+    double LoopStart{}, LoopEnd{0};
+
     while (!quit) {
+        LoopStart = LoopEnd;
+
+        // Event Callbacks
         while(SDL_PollEvent(&e) != 0) {
-            if (e.type == SDL_QUIT) quit = true;
+            if (e.type == SDL_QUIT) {
+                quit = true;
+            }
+            else if (e.type == SDL_KEYDOWN) {
+                // This should implement fine for now...
+                // However, this is repetitive, and we also need to implement sudden key presses and releases.
+                // Because of that, this may need to be reimplemented in the future.
+                switch (e.key.keysym.sym) {
+                    case DORIAN_LUP:
+                    KeyboardInput.on(LUp);
+                    break;
+                    case DORIAN_LDOWN:
+                    KeyboardInput.on(LDown);
+                    break;
+                    case DORIAN_LLEFT:
+                    KeyboardInput.on(LLeft);
+                    break;
+                    case DORIAN_LRIGHT:
+                    KeyboardInput.on(LRight);
+                    break;
+                    case DORIAN_START:
+                    KeyboardInput.on(Start);
+                    break;
+                    case DORIAN_SELECT:
+                    KeyboardInput.on(Select);
+                    break;
+                    case DORIAN_A:
+                    KeyboardInput.on(A);
+                    break;
+                    case DORIAN_B:
+                    KeyboardInput.on(B);
+                    break;
+                    case DORIAN_X:
+                    KeyboardInput.on(X);
+                    break;
+                    case DORIAN_Y:
+                    KeyboardInput.on(Y);
+                    break;
+
+                }
+            }
+            else if (e.type == SDL_KEYUP) {
+                // Same as SDL_KEYDOWN, but for SDL_KEYUP
+                switch (e.key.keysym.sym) {
+                    case DORIAN_LUP:
+                    KeyboardInput.off(LUp);
+                    break;
+                    case DORIAN_LDOWN:
+                    KeyboardInput.off(LDown);
+                    break;
+                    case DORIAN_LLEFT:
+                    KeyboardInput.off(LLeft);
+                    break;
+                    case DORIAN_LRIGHT:
+                    KeyboardInput.off(LRight);
+                    break;
+                    case DORIAN_START:
+                    KeyboardInput.off(Start);
+                    break;
+                    case DORIAN_SELECT:
+                    KeyboardInput.off(Select);
+                    break;
+                    case DORIAN_A:
+                    KeyboardInput.off(A);
+                    break;
+                    case DORIAN_B:
+                    KeyboardInput.off(B);
+                    break;
+                    case DORIAN_X:
+                    KeyboardInput.off(X);
+                    break;
+                    case DORIAN_Y:
+                    KeyboardInput.off(Y);
+                    break;
+
+                }
+            }
         }
 
+        // General Updates
         m_CurrentScene->Update();
 
+        // Drawing
         glClear(GL_COLOR_BUFFER_BIT);
         m_CurrentScene->Draw();
-
         SDL_GL_SwapWindow(m_window);
+
+        // Finishing Calculations for DeltaTime
+        LoopEnd = SDL_GetPerformanceCounter();
+        m_CurrentDT = (LoopEnd - LoopStart)/(double)SDL_GetPerformanceFrequency();
     }
 
     SDL_DestroyWindow(m_window);
@@ -124,7 +270,7 @@ void Window::Loop() {
 // Projection Equations
 
 /*
-[[CAMERA CONCEPT NEEDS REWRITE]]
+[[CAMERA COMPONENT NEEDS REWRITE]]
 
 Vec2<int> HLScene::ProjectPerspective(Vec3<float> pos) {
     // Displaces the position in respect to where the camera is

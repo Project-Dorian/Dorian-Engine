@@ -53,10 +53,10 @@ namespace drn {
         void Init() {
             for (Node* n : WorldComponents) n->init();
         };
-        void Draw() {
-            for (Node* n : WorldComponents) n->draw();
+        void Update() {
+            for (Node* n : WorldComponents) n->update();
         };
-        void Update();
+        void Draw();
 
         //Vec2<int> ProjectPerspective(Vec3<float> pos);
     };
