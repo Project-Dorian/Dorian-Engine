@@ -19,14 +19,12 @@ BoolArray::BoolArray(unsigned char size) {
 }
 
 BoolArray::~BoolArray() {
-    delete m_bitData;
+    //delete m_bitData;
 }
 
 BoolArray BoolArray::operator=(std::string data) {
-    //std::cout << data.length() << " " << m_size;
     if (data.length() == m_size) {
         strcpy(m_bitData, data.c_str());
-        //m_bitData = (char*)data.c_str();
     } else {
         int i = -1;
 
@@ -53,7 +51,7 @@ char* BoolArray::binary() {
     m_PreviouslyReadBinaryString[m_size*8] = '\0';
 
     for (int i{0}; i < m_size*8; i++) {
-        m_PreviouslyReadBinaryString[i] = this->operator[](m_size*8-i)+48;
+        m_PreviouslyReadBinaryString[i] = this->operator[](m_size*8-1-i)+48;
     }
     return m_PreviouslyReadBinaryString;
 }

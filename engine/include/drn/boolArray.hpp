@@ -13,13 +13,29 @@ namespace drn {
         public:
         BoolArray(unsigned char size);
         ~BoolArray();
-        BoolArray operator=(std::string data); // Allows you to assign a binary string to the BoolArray
 
-        bool operator[](unsigned long long i); // Gets a copy of the index
-        char* binary(); // Outputs the whole binary as a string
-        char* ascii(); // outputs the binary as raw data
+        // Allows you to assign a binary string or raw data to the BoolArray
+        // Example Usages:
+        // drn::BoolArray ExampleBoolArray(1);
+        // ExampleBoolArray = "01000101";
+        // ExampleBoolArray = "E";
+        BoolArray operator=(std::string data);
 
+        // returns in boolean form the index
+        bool operator[](unsigned long long i);
+
+        // Outputs the information stored as a binary string
+        char* binary();
+        
+        // outputs the information stored as a raw data string
+        char* ascii();
+        
+        // Outputs the information stored as a hexidecimal
+        char* hex();
+
+        // Assigns 1 at the index
         bool on(unsigned long long i);
+        // Assigns 0 at the index
         bool off(unsigned long long i);
     };
 

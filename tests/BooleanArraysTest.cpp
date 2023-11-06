@@ -7,8 +7,11 @@ using namespace drn;
 int main() {
     bool a{true};
 
+    std::string testString = " ";
+    testString[0] = 0b01000101;
+
     BoolArray testBools(1);
-    testBools = "E";
+    testBools = testString;
 
     cout
         << "Reading the Binary: " << testBools.binary()
@@ -18,6 +21,7 @@ int main() {
         << "\nReading Index 3: " << testBools[3]
         << "\nReading Index 2: " << testBools[2]
         << "\nReading the Binary: " << testBools.binary()
+        << "\nReading the Ascii: " << testBools.ascii()
         << endl;
 
     return 0;
