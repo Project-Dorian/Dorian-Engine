@@ -36,6 +36,9 @@ LLScene::LLScene(int initfunc (), int drawfunc (), int updatefunc ()) {
 }
 
 void HLScene::Draw() {
+    static GLuint gVBO{0}; // Vertecies Buffer Object
+    static GLuint gIBO{0}; // Indecies Buffer Object
+    
     for (Node* n : WorldComponents) {
         // Prepare OpenGL Components
         VertexData.clear();
@@ -47,30 +50,27 @@ void HLScene::Draw() {
 
         // Call OpenGL Buffer and Draw Call if there is anything to draw
         if (VertexData.size() != 0) {
-            GLuint gVBO{0}; // Vertecies Buffer Object
-            GLuint gIBO{0}; // Indecies Buffer Object
-            GLuint gNBO{0}; // Normals Buffer Object
 
-            glGenBuffers(1, &gVBO);
+            // VBO Manipulation
+
+            if (gVBO == 0) glGenBuffers(1, &gVBO);
             glBindBuffer(GL_ARRAY_BUFFER, gVBO);
-            glBufferData(GL_ARRAY_BUFFER, 2*indexData.size()*sizeof(GLfloat), &VertexData[0], GL_STATIC_DRAW);
+            glBufferData(GL_ARRAY_BUFFER, VertexData.size()*sizeof(GLfloat), &VertexData[0], GL_STATIC_DRAW);
 
-            glGenBuffers(1, &gIBO);
+            GLint gVertexPosLocation = glGetAttribLocation(CurrentShader->getProgramID(), "VertexPos");
+            GLint gVertexColorLocation = glGetAttribLocation(CurrentShader->getProgramID(), "VertexColor");
+
+            glEnableVertexAttribArray(gVertexPosLocation);
+	        glVertexAttribPointer(gVertexPosLocation, 3, GL_FLOAT, GL_FALSE, 6 * sizeof(GLfloat), 0);
+
+            glEnableVertexAttribArray(gVertexColorLocation);
+            glVertexAttribPointer(gVertexColorLocation, 3, GL_FLOAT, GL_FALSE, 6 * sizeof(GLfloat), (void*)(3 * sizeof(GLfloat)));
+
+            // IBO Manipulation
+
+            if (gIBO == 0) glGenBuffers(1, &gIBO);
             glBindBuffer(GL_ARRAY_BUFFER, gIBO);
             glBufferData(GL_ARRAY_BUFFER, indexData.size()*sizeof(GLuint), &indexData[0], GL_STATIC_DRAW);
-
-            GLint gVertexPos2DLocation = glGetAttribLocation(CurrentShader->getProgramID(), "VertexPos");
-
-            glEnableVertexAttribArray(gVertexPos2DLocation);
-
-            glBindBuffer( GL_ARRAY_BUFFER, gVBO );
-	        glVertexAttribPointer( gVertexPos2DLocation, 2, GL_FLOAT, GL_FALSE, 2 * sizeof(GLfloat), NULL );
-
-            // Attaching Normals
-
-            //GLint gMeshNormalsAttr = glGetAttribLocation(CurrentShader->getProgramID(), "fNormal");
-            //glBindAttribLocation(CurrentShader->getProgramID(), )
-            //glAttrib
 
             glBindBuffer( GL_ELEMENT_ARRAY_BUFFER, gIBO );
             glDrawElements( GL_TRIANGLES, indexData.size(), GL_UNSIGNED_INT, NULL );
@@ -142,7 +142,8 @@ int Window::Init(Scene* s) {
 
     // Load Initial Scene
     Debug_Log("Initializing Shaders");
-    drn::DefaultShader = Shader(DefaultFragmentShader);
+    drn::DefaultShader = Shader(DefaultFragmentShader, DefaultVertexShader);
+    drn::DefaultShader.UseShader();
 
     Debug_Log("Loading Scene");
     LoadScene(s);

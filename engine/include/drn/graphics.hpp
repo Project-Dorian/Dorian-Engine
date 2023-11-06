@@ -57,9 +57,11 @@ namespace drn {
     //extern void DrawRect(Vec2<int> pos, Vec2<int> size, RGB rgb);
     //extern void DrawRect(Vec2<int> pos, Vec2<int> size, RGBA rgba);
 
-
     //extern void DrawText(std::string text, Vec2<int> pos);
     //extern void DrawText(std::string text, Vec2<int> pos, RGB rgb);
+
+    // 3D Equations
+    extern void DrawPlane(Vec3<float> a, Vec3<float> b, Vec3<float> c, Vec3<float> d);
 
     //extern void DrawLine(Vec2<int> start, Vec2<int> end);
     
