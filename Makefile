@@ -1,6 +1,6 @@
 COMPILER=-Iengine/include/ -O3 -g -fpermissive -w
 ENGINELINKER= -ldorian
-LINKER=-Lengine/lib/ -Lbuild/ -lmingw32 -lSDL2main -lSDL2 -llua51 -lopengl32 -lglew32
+LINKER=-Lengine/lib/$(OS)/ -Lbuild/$(OS)/ -lmingw32 -lSDL2main -lSDL2 -llua51 -lopengl32 -lglew32
 
 # Takes a lua script, converts it to a string variable file (.clua), and compiles it to a .lua.o
 CONVERT_LUA:
@@ -10,16 +10,16 @@ COMPILE_LUA:
 	gcc *.clua -c -o 
 
 COMPILE_CPP:
-	g++ assets/$(FILE) -c $(COMPILER)
+	g++ -o ./engine/tmp/$(FILE).o $(FILE) -c $(COMPILER)
 
 build_engine:
-	g++ engine/src/Engine/*.cpp $(COMPILER) $(LINKER) -shared -o build/dorian.dll -D DEBUG_LEVEL1
+	g++ engine/src/Engine/*.cpp $(COMPILER) $(LINKER) -shared -o build/$(OS)/dorian.dll -D DEBUG_LEVEL1
 
 build_game:
-	g++ Engine/src/main.cpp $(ENGINELINKER) $(LINKER) $(COMPILER) -o build/game.exe 
+	g++ Engine/src/main.cpp $(ENGINELINKER) $(LINKER) $(COMPILER) -o build/$(OS)/game.exe 
 
 test: build_game
-	cd build && .\game.exe
+	cd build/$(OS) && .\game.exe
 
 clean:
-	rm *.o || del *.o
+	rm ./engine/tmp/*.o || del *.o
