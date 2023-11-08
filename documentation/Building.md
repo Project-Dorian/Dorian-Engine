@@ -4,4 +4,4 @@ The general process that the project builder will go through each file is as fol
 3. add important information to the `shared.hpp` file to be shared between other files
 
 # Shared.hpp
-Shared.hpp is a file that is called from any file. It includes: scenes, scripts, and assets.
+Shared.hpp is a file that is called from any file. It includes the following non CPP files: scenes, scripts, animations, and assets.

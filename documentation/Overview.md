@@ -24,13 +24,15 @@ Although the game engine relies on fundamental modules, you will realize that yo
 [Scene Initialization] -> [SDL Updates]
 [SDL Updates|Resize Check|Inputs|Window Reconfigure] -> [Scene Update]
 [Scene Update] -> [Prepare OpenGL Data|Store Verticies/Indecies|Calculate Normals|Prepare Shaders]
-[Prepare OpenGL Data] -> [Scene Draw]
-[Scene Draw] -> [OpenGL Draw]
-[OpenGL Draw] -> [SDL Updates]
+[Prepare OpenGL Data] -> [Scene Draw|
+[Update Current OpenGL Shader] -> [<reference>m_CurrentScene->Draw()]
+[<reference>m_CurrentScene->Draw()] -> [Call OpenGL Draw]
+
+]
+[Scene Draw] -> [SDL Updates]
 
 [<reference>m_CurrentScene->Init()] -- [Scene Initialization]
 [<reference>m_CurrentScene->Update()] -- [Scene Update]
-[<reference>m_CurrentScene->Draw()] -- [Scene Draw]
 ```
 Scene Initialization
 - Calls `m_CurrentScene->init()` once to initialize the scene
@@ -47,6 +49,4 @@ Prepare OpenGL Data
 Scene Draw
 - Calls `m_CurrentScene->Draw()` to pull drawing information
 - This loads the OpenGL Renderer with any information required.
-
-OpenGL Draw
-- Actually draws the information recorded
+- Draws 1 object at a time.

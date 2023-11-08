@@ -6,8 +6,8 @@ tools/*.js
 
 # Project and Compiler Files
 *.o
-build/game.exe
-build/dorian.dll
+build/Windows_NT/game.exe
+build/Windows_NT/dorian.dll
 assets/
 
 .vscode/
