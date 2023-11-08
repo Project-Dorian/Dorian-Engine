@@ -10,9 +10,9 @@
 #define DORIAN_IMAGETYPE SDL_Surface*
 
 namespace drn {
-    //----------------//
-    // Basic Graphics //
-    //----------------//
+    //-------------------//
+    // Graphic Datatypes //
+    //-------------------//
 
     struct RGB {
         ui8 R;
@@ -48,6 +48,38 @@ namespace drn {
     extern Shader DefaultShader;
     extern Shader* CurrentShader;
 
+    // Images
+
+    struct SpriteCoords {
+        int x;
+        int y;
+        int w;
+        int h;
+    };
+
+    // A general image object where you can take any .png file and use it as a spritesheet,  
+    class Image {
+        private:
+        int m_Width;
+        int m_Height;
+        int m_nrChannels;
+
+        unsigned int m_glTexture;
+
+        std::vector<SpriteCoords> m_imgCoords;
+        
+        unsigned char* m_imgData;
+
+        public:
+        Image(char* ImageName, std::vector<SpriteCoords> imgCoords);
+        Image(char* ImageName): Image(ImageName, {{0, 0, 0, 0}}) {};
+
+        void Init(GLenum);
+
+        ~Image();
+
+        void UseImage(GLenum);
+    };
 
     //extern void DrawSprite();
 
@@ -62,6 +94,9 @@ namespace drn {
 
     // 3D Equations
     extern void DrawPlane(Vec3<float> a, Vec3<float> b, Vec3<float> c, Vec3<float> d);
+
+    extern void DrawCube(Vec3<float> pos, Vec3<float> size, Vec3<float> rotation);
+    extern void DrawCube(Vec3<float>, Vec3<float>);
 
     //extern void DrawLine(Vec2<int> start, Vec2<int> end);
     

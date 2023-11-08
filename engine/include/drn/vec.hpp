@@ -55,6 +55,14 @@ namespace drn {
 
         // returns $\mid \vec{v} \mid$
         T length() {return sqrt(X*X+Y*Y+Z*Z);};
+
+        Vec3<T> rotate(Vec3<T> a) {
+            return {
+                cosf(a.X)*(sinf(a.Z)*Y+cosf(a.Z)*X)-sinf(a.Y)*Z,
+                sinf(a.X)*(cosf(a.Y)*Z+sinf(a.Y)*(sinf(a.Z)*Y+cosf(a.Z)*X))+cosf(a.X)*(cosf(a.Z)*Y-sinf(a.Z)*X),
+                sinf(a.X)*(cosf(a.Y)*Z+sinf(a.Y)*(sinf(a.Z)*Y+cosf(a.Z)*X))-sinf(a.X)*(cosf(a.Z)*Y-sinf(a.Z)*X),
+            };
+        };
     };
 }
 
