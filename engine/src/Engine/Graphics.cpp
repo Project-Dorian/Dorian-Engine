@@ -57,11 +57,37 @@ extern std::vector<GLfloat> textureCoords;
 extern int vertexCounter;
 int vertexCounter{0};
 
-int FindVertex(Vec3<GLfloat> coords) {
+// To make comparing and vertex storage a lot easier
+struct Vertex {
+    float X;
+    float Y;
+    float Z;
+    float R;
+    float G;
+    float B;
+    float U;
+    float V;
+
+    bool operator==(Vertex a) {
+        if (X != a.X) return false;
+        if (Y != a.Y) return false;
+        if (Z != a.Z) return false;
+        if (R != a.R) return false;
+        if (G != a.G) return false;
+        if (B != a.B) return false;
+        if (U != a.U) return false;
+        if (V != a.V) return false;
+
+        return true;
+    };
+};
+
+int FindVertex(Vertex coords) {
     if (VertexData.size() == 0) return -1;
 
     for (int i = 0; i < VertexData.size()/8; i++) {
-        if ((coords.X == VertexData[8*i] && coords.Y == VertexData[8*i+1]) && coords.Z == VertexData[8*i+2]) return i;
+        Vertex testvertex{VertexData[8*i], VertexData[8*i+1], VertexData[8*i+2], VertexData[8*i+3], VertexData[8*i+4], VertexData[8*i+5], VertexData[8*i+6], VertexData[8*i+7]};
+        if (coords == testvertex) return i;
     }
 
     return -1;
@@ -123,11 +149,9 @@ Image::Image(char* ImageName, std::vector<SpriteCoords> imgCoords) {
     }
 }
 
-void Image::Init(GLenum slot) {
+void Image::Init() {
     // Generating GL Components. Normal Repeat, MAG filter is nearest, and MIN filter is linear. 
     glGenTextures(1, &m_glTexture);
-
-    glActiveTexture(slot);
     glBindTexture(GL_TEXTURE_2D, m_glTexture);
 
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT);	
@@ -135,7 +159,7 @@ void Image::Init(GLenum slot) {
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR_MIPMAP_LINEAR);
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
 
-    glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, m_Width, m_Height, 0, GL_RGBA, GL_UNSIGNED_BYTE, m_imgData);
+    glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, m_Width, m_Height, 0, GL_RGB, GL_UNSIGNED_BYTE, m_imgData);
     glGenerateMipmap(GL_TEXTURE_2D);
 
     stbi_image_free(m_imgData);
@@ -164,7 +188,7 @@ void drn::DrawQuad(Vec2<float> a, Vec2<float> b, Vec2<float> c, Vec2<float> d) {
     drn::DrawPlane({a.X, a.Y, 1.f}, {b.X, b.Y, 1.f}, {c.X, c.Y, 1.f}, {d.X, d.Y, 1.f});
 }
 
-// Roberto: [REDO] Needs a Heavy Rework.
+// [REDO]: Needs a Heavy Rework.
 // The Planes assume that the vertex color and UV are the same for every usage of the point.
 // This creates clashing between UV points possibly leading to sprites that are L*0 u^2.
 // There may be similar situations for RGB values too
@@ -172,18 +196,18 @@ void drn::DrawPlane(Vec3<float> a, Vec3<float> b, Vec3<float> c, Vec3<float> d) 
     // Setting up Vertex and Index Data
 
     // X, Y, Z, Vertex R, Vertex G, Vertex B
-    GLfloat GeneratedVertexData[] = {
-        (a.X*2/WindowPT->GetWindowDimensions().X)-1.f, (-a.Y*2/WindowPT->GetWindowDimensions().Y)+1.f, a.Z/120, 1.0f, 0.0f, 0.0f, 0.0f, 0.0f,
-        (b.X*2/WindowPT->GetWindowDimensions().X)-1.f, (-b.Y*2/WindowPT->GetWindowDimensions().Y)+1.f, b.Z/120, 0.0f, 1.0f, 0.0f, 0.0f, 1.0f,
-        (c.X*2/WindowPT->GetWindowDimensions().X)-1.f, (-c.Y*2/WindowPT->GetWindowDimensions().Y)+1.f, c.Z/120, 0.0f, 0.0f, 1.0f, 1.0f, 0.0f,
-        (d.X*2/WindowPT->GetWindowDimensions().X)-1.f, (-d.Y*2/WindowPT->GetWindowDimensions().Y)+1.f, d.Z/120, 1.0f, 1.0f, 1.0f, 1.0f, 1.0f
+    Vertex GeneratedVertexData[] = {
+        {(a.X*2/WindowPT->GetWindowDimensions().X)-1.f, (-a.Y*2/WindowPT->GetWindowDimensions().Y)+1.f, a.Z/120, 1.0f, 0.0f, 0.0f, 0.0f, 0.0f},
+        {(b.X*2/WindowPT->GetWindowDimensions().X)-1.f, (-b.Y*2/WindowPT->GetWindowDimensions().Y)+1.f, b.Z/120, 0.0f, 1.0f, 0.0f, 0.0f, 1.0f},
+        {(c.X*2/WindowPT->GetWindowDimensions().X)-1.f, (-c.Y*2/WindowPT->GetWindowDimensions().Y)+1.f, c.Z/120, 0.0f, 0.0f, 1.0f, 1.0f, 0.0f},
+        {(d.X*2/WindowPT->GetWindowDimensions().X)-1.f, (-d.Y*2/WindowPT->GetWindowDimensions().Y)+1.f, d.Z/120, 1.0f, 1.0f, 1.0f, 1.0f, 1.0f}
     };
 
     int indexOrder[] = {0, 1, 2, 3, 2, 1};
 
     // This makes sure vertex positions are not reused
     for (int i = 0; i < 6; i++) {
-        int VertexExists{FindVertex({GeneratedVertexData[8*indexOrder[i]], GeneratedVertexData[8*indexOrder[i]+1], GeneratedVertexData[8*indexOrder[i]+2]})};
+        int VertexExists{FindVertex(GeneratedVertexData[indexOrder[i]])};
         if (VertexExists != -1) {
             indexData.push_back(VertexExists);
             continue;
@@ -194,35 +218,35 @@ void drn::DrawPlane(Vec3<float> a, Vec3<float> b, Vec3<float> c, Vec3<float> d) 
         // Push New Vertices
         
         // ROBERTO: is there a more practical way to push the vertex data?
-        VertexData.push_back(GeneratedVertexData[8*indexOrder[i]]);
-        VertexData.push_back(GeneratedVertexData[8*indexOrder[i]+1]);
-        VertexData.push_back(GeneratedVertexData[8*indexOrder[i]+2]);
-        VertexData.push_back(GeneratedVertexData[8*indexOrder[i]+3]);
-        VertexData.push_back(GeneratedVertexData[8*indexOrder[i]+4]);
-        VertexData.push_back(GeneratedVertexData[8*indexOrder[i]+5]);
-        VertexData.push_back(GeneratedVertexData[8*indexOrder[i]+6]);
-        VertexData.push_back(GeneratedVertexData[8*indexOrder[i]+7]);
+        VertexData.push_back(GeneratedVertexData[indexOrder[i]].X);
+        VertexData.push_back(GeneratedVertexData[indexOrder[i]].Y);
+        VertexData.push_back(GeneratedVertexData[indexOrder[i]].Z);
+        VertexData.push_back(GeneratedVertexData[indexOrder[i]].R);
+        VertexData.push_back(GeneratedVertexData[indexOrder[i]].G);
+        VertexData.push_back(GeneratedVertexData[indexOrder[i]].B);
+        VertexData.push_back(GeneratedVertexData[indexOrder[i]].U);
+        VertexData.push_back(GeneratedVertexData[indexOrder[i]].V);
     }
 }
 
 void drn::DrawCube(Vec3<float> p, Vec3<float> s, Vec3<float> r) {
     Vec3<float> cv[8] = {
-        ((Vec3<float>){-s.X/2, -s.Y/2, -s.Z/2}).rotate(r)+p,
-        ((Vec3<float>){-s.X/2, -s.Y/2, s.Z/2}).rotate(r)+p,
-        ((Vec3<float>){-s.X/2, s.Y/2, -s.Z/2}).rotate(r)+p,
-        ((Vec3<float>){-s.X/2, s.Y/2, s.Z/2}).rotate(r)+p,
-        ((Vec3<float>){s.X/2, -s.Y/2, -s.Z/2}).rotate(r)+p,
-        ((Vec3<float>){s.X/2, -s.Y/2, s.Z/2}).rotate(r)+p,
-        ((Vec3<float>){s.X/2, s.Y/2, -s.Z/2}).rotate(r)+p,
-        ((Vec3<float>){s.X/2, s.Y/2, s.Z/2}).rotate(r)+p
+        ((Vec3<float>){-s.X/2, -s.Y/2, -s.Z/2}).rotate(r)+p, // -1 -1 -1
+        ((Vec3<float>){-s.X/2, -s.Y/2, s.Z/2}).rotate(r)+p,  // -1 -1 1
+        ((Vec3<float>){-s.X/2, s.Y/2, -s.Z/2}).rotate(r)+p,  // -1 1 -1
+        ((Vec3<float>){-s.X/2, s.Y/2, s.Z/2}).rotate(r)+p,   // -1 1 1
+        ((Vec3<float>){s.X/2, -s.Y/2, -s.Z/2}).rotate(r)+p,  // 1 -1 -1
+        ((Vec3<float>){s.X/2, -s.Y/2, s.Z/2}).rotate(r)+p,   // 1 -1 1
+        ((Vec3<float>){s.X/2, s.Y/2, -s.Z/2}).rotate(r)+p,   // 1 1 -1
+        ((Vec3<float>){s.X/2, s.Y/2, s.Z/2}).rotate(r)+p     // 1 1 1
     };
 
-    DrawPlane(cv[0], cv[1], cv[3], cv[2]);
-    DrawPlane(cv[4], cv[5], cv[7], cv[6]);
-    DrawPlane(cv[3], cv[4], cv[2], cv[7]);
-    DrawPlane(cv[0], cv[3], cv[5], cv[4]);
-    DrawPlane(cv[0], cv[3], cv[4], cv[6]);
-    DrawPlane(cv[0], cv[3], cv[5], cv[4]);
+    DrawPlane(cv[0], cv[2], cv[4], cv[6]);
+    DrawPlane(cv[0], cv[4], cv[1], cv[5]);
+    DrawPlane(cv[4], cv[6], cv[5], cv[7]);
+    DrawPlane(cv[0], cv[1], cv[2], cv[3]);
+    DrawPlane(cv[2], cv[3], cv[6], cv[7]);
+    DrawPlane(cv[1], cv[5], cv[3], cv[7]);
 }
 
 void drn::DrawCube(Vec3<float> pos, Vec3<float> size) {

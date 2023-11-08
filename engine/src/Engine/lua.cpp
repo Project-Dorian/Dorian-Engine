@@ -62,6 +62,18 @@ int l_drawQuad(lua_State *L) {
     return 0;
 }
 
+int l_drawCube(lua_State *L) {
+    float x1 = lua_tonumber(L, 1);
+    float y1 = lua_tonumber(L, 2);
+    float z1 = lua_tonumber(L, 3);
+    float x2 = lua_tonumber(L, 4);
+    float y2 = lua_tonumber(L, 5);
+    float z2 = lua_tonumber(L, 6);
+
+    drn::DrawCube({x1, y1, z1}, {x2, y2, z2});
+    return 0;
+}
+
 // Input
 
 int l_inputPressed(lua_State *L) {
@@ -105,6 +117,9 @@ void lua_setup(lua_State* L) {
     lua_pushcfunction(L, l_drawQuad);
     lua_setglobal(L, "DrawQuad");
 
+    lua_pushcfunction(L, l_drawCube);
+    lua_setglobal(L, "DrawCube");
+
     // Input
     lua_pushcfunction(L, l_inputDown);
     lua_setglobal(L, "InputDown");
@@ -130,7 +145,7 @@ LuaNode::~LuaNode() {
 }
 
 void LuaNode::init() {
-    if (luaL_dofile(L, m_filename.c_str())) Debug_Warn("File " << m_filename.c_str() << " Not Found"); 
+    if (luaL_dofile(L, m_filename.c_str())) Debug_Error("File " << m_filename.c_str() << " Not Found"); 
 }
 
 void LuaNode::draw() {

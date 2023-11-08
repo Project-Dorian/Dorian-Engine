@@ -7,8 +7,6 @@
 
 #include <string>
 
-#define DORIAN_IMAGETYPE SDL_Surface*
-
 namespace drn {
     //-------------------//
     // Graphic Datatypes //
@@ -74,7 +72,7 @@ namespace drn {
         Image(char* ImageName, std::vector<SpriteCoords> imgCoords);
         Image(char* ImageName): Image(ImageName, {{0, 0, 0, 0}}) {};
 
-        void Init(GLenum);
+        void Init();
 
         ~Image();
 
@@ -93,6 +91,8 @@ namespace drn {
     //extern void DrawText(std::string text, Vec2<int> pos, RGB rgb);
 
     // 3D Equations
+
+    // Draws a plane that covers the area of |AB x AC|
     extern void DrawPlane(Vec3<float> a, Vec3<float> b, Vec3<float> c, Vec3<float> d);
 
     extern void DrawCube(Vec3<float> pos, Vec3<float> size, Vec3<float> rotation);

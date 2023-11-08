@@ -10,20 +10,20 @@ Window GameWindow("Dorian Engine", 1080, 720);
 #ifndef DORIAN_INITSCENE
 HLScene TestScene;
 
-Image TestImage("testImage.png");
+Image TestImage("testImage.jpg");
 
 class TestCube : public Node {
     public:
     float rX = 0;
     void init() {
-        TestImage.Init(GL_TEXTURE0);
+        TestImage.Init();
     }
     void update() {
         rX += GameWindow.getDT();
     }
     void draw() {
         TestImage.UseImage(GL_TEXTURE0);
-        drn::DrawRect({100, 100}, {100, 100});
+        drn::DrawCube({100, 100, 0}, {100, 100, 100}, {-30, 0, rX});
     };
 };
 

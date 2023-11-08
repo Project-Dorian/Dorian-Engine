@@ -59,12 +59,17 @@ void HLScene::Draw() {
 
             GLint gVertexPosLocation = glGetAttribLocation(CurrentShader->getProgramID(), "VertexPos");
             GLint gVertexColorLocation = glGetAttribLocation(CurrentShader->getProgramID(), "VertexColor");
+            GLint gVertexUVLocation = glGetAttribLocation(CurrentShader->getProgramID(), "TexCoord");
+
 
             glEnableVertexAttribArray(gVertexPosLocation);
-	        glVertexAttribPointer(gVertexPosLocation, 3, GL_FLOAT, GL_FALSE, 6 * sizeof(GLfloat), 0);
+	        glVertexAttribPointer(gVertexPosLocation, 3, GL_FLOAT, GL_FALSE, 8 * sizeof(GLfloat), 0);
 
             glEnableVertexAttribArray(gVertexColorLocation);
-            glVertexAttribPointer(gVertexColorLocation, 3, GL_FLOAT, GL_FALSE, 6 * sizeof(GLfloat), (void*)(3 * sizeof(GLfloat)));
+            glVertexAttribPointer(gVertexColorLocation, 3, GL_FLOAT, GL_FALSE, 8 * sizeof(GLfloat), (void*)(3 * sizeof(GLfloat)));
+
+            glEnableVertexAttribArray(gVertexUVLocation);
+            glVertexAttribPointer(gVertexUVLocation, 2, GL_FLOAT, GL_FALSE, 8*sizeof(GLfloat), (void*)(6 * sizeof(GLfloat)));
 
             // IBO Manipulation
 
@@ -72,8 +77,10 @@ void HLScene::Draw() {
             glBindBuffer(GL_ARRAY_BUFFER, gIBO);
             glBufferData(GL_ARRAY_BUFFER, indexData.size()*sizeof(GLuint), &indexData[0], GL_STATIC_DRAW);
 
+            
+
             glBindBuffer( GL_ELEMENT_ARRAY_BUFFER, gIBO );
-            glDrawElements( GL_TRIANGLES, indexData.size(), GL_UNSIGNED_INT, NULL );
+            glDrawElements(GL_TRIANGLES, indexData.size(), GL_UNSIGNED_INT, NULL);
         }
     }
 }
@@ -137,6 +144,9 @@ int Window::Init(Scene* s) {
 
     glMatrixMode(GL_MODELVIEW);
     glLoadIdentity();
+
+    glEnable(GL_TEXTURE_2D);
+    glEnable(GL_DEPTH_TEST);
 
     glClearColor(0.f, 0.f, 0.f, 1.f);
 
@@ -254,7 +264,7 @@ void Window::Loop() {
         m_CurrentScene->Update();
 
         // Drawing
-        glClear(GL_COLOR_BUFFER_BIT);
+        glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
         m_CurrentScene->Draw();
         SDL_GL_SwapWindow(m_window);
 
