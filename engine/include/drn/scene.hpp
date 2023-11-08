@@ -6,6 +6,7 @@
 
 namespace drn {
 
+    // A generic node to be inherited to create different components in a scene 
     class Node {
         public:
         virtual void init() {};
@@ -15,6 +16,8 @@ namespace drn {
         virtual ~Node() {};
     };
 
+    // A generic node that is supposed to interact with the environment in the scene.
+    // Also used to create different components for the scene
     class ObjectNode: public Node {
         public:
         Vec3<float> position = ZERO_VECTOR;

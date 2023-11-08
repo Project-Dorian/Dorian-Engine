@@ -19,8 +19,8 @@
 #include <iostream>
 
 #define Debug_Log(string) std::cout << "LOG: "  << string << std::endl
-#define Debug_Warn(string) std::cout << "\x1b[33m  WARN: " << string << "; Line " << __LINE__ << " in " << __FILE__ << "\x1b[0m" << std::endl
-#define Debug_Error(string) std::cout << "\x1b[31m  ERROR: " << string << "; Line " << __LINE__ << " in " << __FILE__ << "\x1b[0m" << std::endl
+#define Debug_Warn(string) std::cout << "\x1b[33mWARN: " << string << "; Line " << __LINE__ << " in " << __FILE__ << "\x1b[0m" << std::endl
+#define Debug_Error(string) std::cout << "\x1b[31mERROR: " << string << "; Line " << __LINE__ << " in " << __FILE__ << "\x1b[0m" << std::endl
 #endif
 
 #ifndef DEBUG_LEVEL1

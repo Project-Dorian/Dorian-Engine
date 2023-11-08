@@ -10,6 +10,7 @@ namespace drn {
         std::string data;
     };
 
+    // A node that is controlled by a lua script.
     class LuaNode: public Node {
         private:
         lua_State *L;
@@ -26,6 +27,7 @@ namespace drn {
         virtual void update();
     };
 
+    // An ObjectNode that is controlled by a lua script.
     class LuaObjectNode: public ObjectNode {
         private:
         lua_State *L;
