@@ -102,10 +102,6 @@ namespace drn {
     
     //extern void FillBG(RGB rgb);
     //extern void FillBG(RGBA rgba);
-
-    class Texture {
-
-    };
 }
 
 #endif
