@@ -44,7 +44,8 @@ GLchar* drn::DefaultFragmentShader[]{
     "uniform sampler2D tex0;\n"
     "void main()\n"
     "{\n"
-    "    FragColor = texture(tex0, FragTexCoord);\n"
+    "   vec4 Color = texture(tex0, FragTexCoord);\n"
+    "   FragColor = vec4(vec3(1-gl_FragCoord.z)*Color.xyz, 1.0f);\n"
     //"   FragColor = vec4(FragTexCoord.xy, 0.0f, 1.0f);"
     "}\n"
 };
@@ -121,8 +122,6 @@ drn::Shader::Shader(GLchar** FragmentCode, GLchar** VertexCode) {
 
     glLinkProgram(m_GLProgramID);
 
-    Debug_Log(glGetUniformLocation(m_GLProgramID, "tex0"));
-
     glUniform1i(glGetUniformLocation(m_GLProgramID, "tex0"), 0);
 }
 
@@ -188,19 +187,15 @@ void drn::DrawQuad(Vec2<float> a, Vec2<float> b, Vec2<float> c, Vec2<float> d) {
     drn::DrawPlane({a.X, a.Y, 1.f}, {b.X, b.Y, 1.f}, {c.X, c.Y, 1.f}, {d.X, d.Y, 1.f});
 }
 
-// [REDO]: Needs a Heavy Rework.
-// The Planes assume that the vertex color and UV are the same for every usage of the point.
-// This creates clashing between UV points possibly leading to sprites that are L*0 u^2.
-// There may be similar situations for RGB values too
 void drn::DrawPlane(Vec3<float> a, Vec3<float> b, Vec3<float> c, Vec3<float> d) {
     // Setting up Vertex and Index Data
 
     // X, Y, Z, Vertex R, Vertex G, Vertex B
     Vertex GeneratedVertexData[] = {
-        {(a.X*2/WindowPT->GetWindowDimensions().X)-1.f, (-a.Y*2/WindowPT->GetWindowDimensions().Y)+1.f, a.Z/120, 1.0f, 0.0f, 0.0f, 0.0f, 0.0f},
-        {(b.X*2/WindowPT->GetWindowDimensions().X)-1.f, (-b.Y*2/WindowPT->GetWindowDimensions().Y)+1.f, b.Z/120, 0.0f, 1.0f, 0.0f, 0.0f, 1.0f},
-        {(c.X*2/WindowPT->GetWindowDimensions().X)-1.f, (-c.Y*2/WindowPT->GetWindowDimensions().Y)+1.f, c.Z/120, 0.0f, 0.0f, 1.0f, 1.0f, 0.0f},
-        {(d.X*2/WindowPT->GetWindowDimensions().X)-1.f, (-d.Y*2/WindowPT->GetWindowDimensions().Y)+1.f, d.Z/120, 1.0f, 1.0f, 1.0f, 1.0f, 1.0f}
+        {a.X/WindowPT->GetWindowDimensions().X*2, -a.Y/WindowPT->GetWindowDimensions().Y*2, a.Z/120, 1.0f, 0.0f, 0.0f, 0.0f, 0.0f},
+        {b.X/WindowPT->GetWindowDimensions().X*2, -b.Y/WindowPT->GetWindowDimensions().Y*2, b.Z/120, 0.0f, 1.0f, 0.0f, 0.0f, 1.0f},
+        {c.X/WindowPT->GetWindowDimensions().X*2, -c.Y/WindowPT->GetWindowDimensions().Y*2, c.Z/120, 0.0f, 0.0f, 1.0f, 1.0f, 0.0f},
+        {d.X/WindowPT->GetWindowDimensions().X*2, -d.Y/WindowPT->GetWindowDimensions().Y*2, d.Z/120, 1.0f, 1.0f, 1.0f, 1.0f, 1.0f}
     };
 
     int indexOrder[] = {0, 1, 2, 3, 2, 1};
