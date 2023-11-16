@@ -1,3 +1,0 @@
-function WriteToFile(data: string) {
-
-}
