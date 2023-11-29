@@ -5,12 +5,15 @@
 #include <vector>
 
 namespace drn {
+    // The Base Class for tests. Allows me to push back a Test<T> into TestsVector.
     class TestBase {
         public:
 
         virtual int RunTest();
     };
 
+    // do not modify directly
+    // loads all the tests into the unit test, and runs each test line by line.
     std::vector<TestBase*> TestsVector;
 
     class TestLabel : public TestBase {
@@ -26,7 +29,7 @@ namespace drn {
         }
 
         int RunTest() {
-            std::cout << m_text << "\n";
+            std::cout << "\n" << m_text << "\n";
             return 2; 
         }
     };
@@ -51,10 +54,10 @@ namespace drn {
             std::cout << m_TestName << ": ";
             T Result = (*TestFunction)();
             if (Result == m_ExpectedResult) {
-                std::cout << "Test Successful\n";
+                std::cout << "\x1B[1;32mTest Successful\x1b[0m\n";
                 return 0;
             } else {
-                std::cout << "Test failed. Returned \"" << Result << "\". Expected \"" << m_ExpectedResult << "\"\n";
+                std::cout << "\x1b[1;31mTest failed. Returned \"" << Result << "\". Expected \"" << m_ExpectedResult << "\"\x1b[0m\n";
                 return 1;
             }
         }
@@ -78,7 +81,7 @@ int main() {
         }
     };
 
-    std::cout << "\nSuccessful Tests: " << (Tests - Errors) << "\nFailed Tests: " << Errors << "\n";
+    std::cout << "\x1B[1;32m\nSuccessful Tests: " << (Tests - Errors) << "\n\x1b[1;31mFailed Tests: " << Errors << "\x1b[0m\n";
 
     return Errors;
 }
