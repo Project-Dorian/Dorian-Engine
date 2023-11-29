@@ -2,6 +2,7 @@
 #define DORIAN_VECTORS
 
 #include <cmath>
+#include <fmt/format.h>
 
 // General macro for a zero vector. Works with any size vector
 #define ZERO_VECTOR {}
@@ -21,6 +22,10 @@ namespace drn {
         // returns $\vec{v}-\vec{u}$
         Vec2<T> operator-(Vec2<T> u) {return {X-u.X, Y-u.Y};};
         
+        bool operator==(Vec2<T> u) {
+            return X == u.X && Y == u.Y;
+        };
+
         // returns $a\vec{v}$
         Vec2<T> operator*(T a) {return {X*a, Y*a};};
         // returns the dot product of $\vec{v}\cdot \vec{u}$
@@ -30,6 +35,11 @@ namespace drn {
 
         // returns $\mid \vec{v} \mid$
         T length() {return sqrt(X*X+Y*Y);};
+
+        // For debugging purposes; prints the vector in angle bracket notation as a string
+        std::string toString() {
+            return fmt::format("<{}, {}>", X, Y);
+        }
     };
 
     // `struct drn::Vec3<T> {T x, T y, T z}`
@@ -45,7 +55,7 @@ namespace drn {
         Vec3<T> operator+(Vec3<T> a) {return {X+a.X, Y+a.Y, Z+a.Z};};
         // returns $\vec{v}-\vec{u}$
         Vec3<T> operator-(Vec3<T> a) {return {X-a.X, Y-a.Y, Z-a.Z};};
-        
+
         // returns $a\vec{v}$
         Vec3<T> operator*(T a) {return {X*a, Y*a, Z*a};};
         // returns the dot product of $\vec{v}\cdot \vec{u}$
@@ -55,6 +65,15 @@ namespace drn {
 
         // returns $\mid \vec{v} \mid$
         T length() {return sqrt(X*X+Y*Y+Z*Z);};
+
+        bool operator==(Vec3<T> u) {
+            return (X == u.X && Y == u.Y) && Z == u.Z;
+        };
+
+        // For debugging purposes; prints the vector in angle bracket notation as a string
+        std::string toString() {
+            return fmt::format("<{}, {}, {}>", X, Y, Z);
+        }
 
         Vec3<T> rotate(Vec3<T> a) {
             return {
