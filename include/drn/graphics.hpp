@@ -2,7 +2,6 @@
 #define DORIAN_GRAPHICS
 
 #include "dorian.hpp"
-#include "vec.hpp"
 #include <GL/glew.h>
 
 #include <string>
@@ -79,7 +78,9 @@ namespace drn {
         void UseImage(GLenum);
     };
 
-    //extern void DrawSprite();
+    // 2D Draw Functions
+
+    //extern void DrawSprite()
 
     extern void DrawQuad(Vec2<float> a, Vec2<float> b, Vec2<float> c, Vec2<float> d);
 
@@ -90,7 +91,7 @@ namespace drn {
     //extern void DrawText(std::string text, Vec2<int> pos);
     //extern void DrawText(std::string text, Vec2<int> pos, RGB rgb);
 
-    // 3D Equations
+    // 3D Draw Functions
 
     // Draws a plane that covers the area of |AB x AC|
     extern void DrawPlane(Vec3<float> a, Vec3<float> b, Vec3<float> c, Vec3<float> d);

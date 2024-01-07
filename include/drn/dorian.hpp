@@ -3,7 +3,7 @@
 
 #include "SDL2/SDL.h"
 
-#include "vec.hpp"
+#include "math/vec.hpp"
 #include <vector>
 #include <string>
 
