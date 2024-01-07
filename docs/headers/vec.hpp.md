@@ -1,8 +1,8 @@
 ---
 aliases:
-  - <drn/vec.hpp>
+  - <drn/math/vec.hpp>
 ---
-# `#include <drn/vec.hpp>`
+# `#include <drn/math/vec.hpp>`
 
 this is a fundamental library for the majority of the Dorian engine. This is where most of the math is performed through.
 ## Vectors Basics
