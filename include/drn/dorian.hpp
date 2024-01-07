@@ -31,18 +31,6 @@
 
 #endif
 
-typedef char          i8;
-typedef short         i16;
-typedef int           i32;
-typedef long int      i64;
-typedef long long int i128;
-
-typedef unsigned char          ui8;
-typedef unsigned short         ui16;
-typedef unsigned int           ui32;
-typedef unsigned long int      ui64;
-typedef unsigned long long int ui128;
-
 namespace drn {
 
     // Generic Empty Scene
@@ -66,12 +54,12 @@ namespace drn {
         SDL_GLContext m_glContext;
 
         std::string m_WindowName;
-        i32 m_windowWidth;
-        i32 m_windowHeight;
+        int m_windowWidth;
+        int m_windowHeight;
 
         public:
         // Constructor
-        Window(std::string title, i32 width, i32 height);
+        Window(std::string title, int width, int height);
         Window(std::string title): Window(title, DWINDOW_WIDTH, DWINDOW_HEIGHT) {};
 
         // The Generic Window Class Constructor
@@ -85,11 +73,11 @@ namespace drn {
         // The primary loop function of a Dorian Window
         void Loop();
 
-        Vec2<i32> GetWindowDimensions() {return {DWINDOW_WIDTH, DWINDOW_HEIGHT};};
+        Vec2<int> GetWindowDimensions() {return {DWINDOW_WIDTH, DWINDOW_HEIGHT};};
 
         // TODO: Get the rest of the anchors programmed in the game.
         // They are not needed for this game specifically, but could help in the future
-        Vec2<int> AnchorOnScreen(Vec2<i32> padding, Vec2<i32> size, Anchor anchor) {
+        Vec2<int> AnchorOnScreen(Vec2<int> padding, Vec2<int> size, Anchor anchor) {
             // Please fill this in properly
             switch (anchor) {
                 case TopRight:
@@ -104,6 +92,8 @@ namespace drn {
             return padding;
         }
     };
+
+    extern Window* WindowPT;
 }
 
 #endif
