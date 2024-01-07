@@ -23,7 +23,7 @@ class TestCube : public Node {
     }
     void draw() {
         TestImage.UseImage(GL_TEXTURE0);
-        drn::DrawCube({100, 100, 0}, {100, 100, 100}, {-30, 0, rX});
+        drn::DrawCube({0, 0, 0}, {100, 100, 100}, {-30, 0, rX});
     };
 };
 
