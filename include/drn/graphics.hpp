@@ -91,6 +91,8 @@ namespace drn {
     //extern void DrawText(std::string text, Vec2<int> pos);
     //extern void DrawText(std::string text, Vec2<int> pos, RGB rgb);
 
+    extern void DrawPolygon(int sides, Vec2<float> pos, Vec2<float> scale);
+
     // 3D Draw Functions
 
     // Draws a plane that covers the area of |AB x AC|
