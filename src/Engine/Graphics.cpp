@@ -9,10 +9,6 @@
 #include <exception>
 #include <iostream>
 
-namespace drn {
-    extern Window* WindowPT;
-}
-
 using namespace drn;
 
 //-------------------//

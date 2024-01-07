@@ -8,10 +8,6 @@
 #include <cmath>
 #include <iostream>
 
-namespace drn {
-    extern Window* WindowPT;
-}
-
 extern std::vector<GLfloat> VertexData;
 extern std::vector<GLuint> indexData;
 extern std::vector<GLfloat> meshNormals;
@@ -89,7 +85,7 @@ void HLScene::Draw() {
 // WINDOW CLASS //
 //--------------//
 
-Window::Window(std::string title, i32 width, i32 height) {
+Window::Window(std::string title, int width, int height) {
     m_CurrentDT = 0;
     m_WindowName = title;
     m_windowWidth = width;

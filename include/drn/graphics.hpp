@@ -13,16 +13,16 @@ namespace drn {
     //-------------------//
 
     struct RGB {
-        ui8 R;
-        ui8 G;
-        ui8 B;
+        unsigned char R;
+        unsigned char G;
+        unsigned char B;
     };
 
     struct RGBA {
-        ui8 R;
-        ui8 G;
-        ui8 B;
-        ui8 A;
+        unsigned char R;
+        unsigned char G;
+        unsigned char B;
+        unsigned char A;
     };
 
     extern GLchar* DefaultVertexShader[];
