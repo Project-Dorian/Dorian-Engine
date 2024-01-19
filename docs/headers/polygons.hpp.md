@@ -10,6 +10,7 @@ Name | Type | Description
 --|--|--
 `PolygonVerts2D(int s)` | drn::Vec2\<float>* function | Generates an array of vertices for a basic 2D shape 
 `PolygonEdges2D(int s)` | int* function | Generates the OpenGL edges of a basic 2D shape
+`CleanPolygonData()` | void function | Clears polygon data created by the functions in this module
 
 ## Mathematics
 This was not possible to write code for without mathematically conceptualizing the information. Here's what to understand.
@@ -61,5 +62,27 @@ $$
 W(s)_s=0\{0,s\}s\{s,1\}1\{1,0\}0
 $$
 
+### 3D Polyhedrons
+To generate polyhedrons, we can use a row-column system to generate the vertices and edges. To make generation a lot easier, we can also generate the sphere coordinate data in the form of a plane, and then warp it in the shape of a sphere.
+
+Here is the formula I use to position the vertex coordinates
+$$
+V(r,c)_{ri+j}=\biggl\langle
+\cos\biggl(\frac{360i}{r}+17(-1)^j\biggl)\sin\biggl(\frac{180j}{c}\biggl),
+\sin\biggl(\frac{360i}{r}+17(-1)^j\biggl)\sin\biggl(\frac{180j}{c}\biggl),
+\sin\biggl(\frac{180j}{c}\biggl)
+\biggl\rangle
+$$
+$$
+V(r,c)_{ri+j}\in\mathbb{R}^3, 0\le i\le r, 0\le j\le c
+$$
+
 ## `drn::Vec2<float>* PolygonVerts2D(int s)`
 This function generates and returns the vertices of a 2D polygon made of triangles based on the number of sides input.
+
+## `int* PolygonEdges2D(int s)`
+This function generates and returns the walk cycle of each OpenGL triangle of a basic 2D polygon.
+
+## `void CleanPolygonData()`
+
+Because the other functions create arrays in the form of pointers, the purpose of this function is to clear the generated function.
