@@ -1,4 +1,4 @@
-COMPILER=-Iinclude/ -O3 -g -fpermissive -w -std=c++2a
+COMPILER=-Iinclude/ -O0 -g -fpermissive -w -Wall -std=c++2a
 ENGINELINKER= -ldorian
 LINKER=-Llib/$(OS)/ -Lbuild/$(OS)/ -lmingw32 -lSDL2main -lSDL2 -llua51 -lopengl32 -lglew32
 

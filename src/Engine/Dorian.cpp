@@ -1,5 +1,6 @@
 #include <drn/scene.hpp>
 #include <drn/input.hpp>
+#include <drn/math/shapes.hpp>
 
 #include <GL/glew.h>
 #include <SDL2/SDL_opengl.h>
@@ -272,6 +273,8 @@ void Window::Loop() {
     SDL_DestroyWindow(m_window);
 
     SDL_Quit();
+
+    CleanPolygonData();
 }
 
 // Projection Equations
